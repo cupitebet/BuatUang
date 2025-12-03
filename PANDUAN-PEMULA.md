@@ -1,6 +1,8 @@
-# 📖 Panduan Lengkap untuk Pemula - MoneyPrinterTurbo
+# 📖 Panduan Lengkap untuk Pemula - Buat Uang
 
 **Panduan ini dibuat khusus untuk pemula yang ingin membuat video otomatis dengan AI, tanpa perlu pengetahuan teknis yang mendalam.**
+
+> **Buat Uang** adalah generator video otomatis berbasis AI (MoneyPrinterTurbo) yang sudah dilokalisasi untuk Indonesia.
 
 ---
 
@@ -16,9 +18,9 @@
 
 ---
 
-## 🎯 Apa itu MoneyPrinterTurbo?
+## 🎯 Apa itu Buat Uang?
 
-**MoneyPrinterTurbo** adalah aplikasi yang bisa membuat video pendek secara otomatis dengan bantuan AI.
+**Buat Uang** adalah aplikasi yang bisa membuat video pendek secara otomatis dengan bantuan AI. Aplikasi ini berbasis MoneyPrinterTurbo yang sudah dilokalisasi untuk Indonesia dengan panduan lengkap dalam Bahasa Indonesia.
 
 ### Cara Kerjanya:
 ```
@@ -222,11 +224,11 @@ sudo yum install ImageMagick
 # 1. Pindah ke folder Downloads (atau folder lain yang Anda inginkan)
 cd Downloads
 
-# 2. Download source code
-git clone https://github.com/harry0703/MoneyPrinterTurbo.git
+# 2. Download Buat Uang source code
+git clone https://github.com/cupitebet/BuatUang.git
 
 # 3. Masuk ke folder
-cd MoneyPrinterTurbo
+cd BuatUang
 ```
 
 ---
