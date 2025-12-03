@@ -69,7 +69,10 @@ Anda → Berikan Topik → AI Proses → Video Jadi!
 
 **Download:**
 - Windows: https://www.python.org/downloads/
-- Klik tombol "Download Python 3.11.x"
+- **⚠️ SANGAT PENTING untuk Windows: Download versi 64-bit!**
+  - Klik "Download Python 3.11.x"
+  - Pilih: `Windows installer (64-bit)` atau file `python-3.11.x-amd64.exe`
+  - JANGAN download versi 32-bit!
 - **PENTING**: Saat install, centang "Add Python to PATH"!
 
 **Cara Cek Sudah Terinstall:**
@@ -77,7 +80,15 @@ Anda → Berikan Topik → AI Proses → Video Jadi!
 # Buka Command Prompt (Windows) atau Terminal (Mac/Linux)
 python --version
 # Harus muncul: Python 3.11.x
+
+# Cek 64-bit (PENTING untuk Windows!)
+python -c "import platform; print(platform.architecture())"
+# Harus muncul: ('64bit', ...) ✅
+# Jika muncul ('32bit', ...) → Install ulang Python 64-bit!
 ```
+
+**❌ Jika Dapat Error saat Install Dependencies:**
+Lihat: [SOLUSI-ERROR-WINDOWS.md](SOLUSI-ERROR-WINDOWS.md)
 
 #### B. Git (Gratis)
 **Apa itu?** Tool untuk download source code dari internet.
@@ -350,6 +361,23 @@ python main.py
 ---
 
 ## 🐛 Troubleshooting
+
+### ⚠️ ERROR WINDOWS: "Could not find a version that satisfies the requirement onnxruntime"
+
+**Penyebab:** Python yang terinstall adalah versi 32-bit (harus 64-bit)
+
+**Solusi Lengkap:** 📖 **[Baca SOLUSI-ERROR-WINDOWS.md](SOLUSI-ERROR-WINDOWS.md)**
+
+**Quick Fix:**
+1. Uninstall Python 32-bit
+2. Download Python 64-bit: https://www.python.org/downloads/
+   - Pilih file: `python-3.11.x-amd64.exe`
+3. Install dengan centang "Add Python to PATH"
+4. Cek: `python -c "import platform; print(platform.architecture())"`
+   - Harus: `('64bit', ...)` ✅
+5. Install ulang: `pip install -r requirements.txt`
+
+---
 
 ### Problem 1: "Python not found"
 
