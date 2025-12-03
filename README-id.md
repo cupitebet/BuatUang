@@ -1,5 +1,7 @@
 <div align="center">
-<h1 align="center">MoneyPrinterTurbo 💸</h1>
+<h1 align="center">Buat Uang 💸</h1>
+<h3 align="center"><i>Generator Video Otomatis dengan AI</i></h3>
+<p align="center"><i>Berbasis MoneyPrinterTurbo</i></p>
 
 <p align="center">
   <a href="https://github.com/harry0703/MoneyPrinterTurbo/stargazers"><img src="https://img.shields.io/github/stars/harry0703/MoneyPrinterTurbo.svg?style=for-the-badge" alt="Stargazers"></a>
@@ -15,7 +17,9 @@
 </div>
 <br>
 
-Cukup berikan sebuah <b>topik</b> atau <b>kata kunci</b> untuk video, maka sistem akan secara otomatis menghasilkan naskah video, materi video, subtitle video, dan musik latar belakang video, kemudian menggabungkannya menjadi video pendek berkualitas tinggi.
+**Buat Uang** adalah generator video otomatis berbasis AI yang memudahkan Anda membuat konten video berkualitas tinggi.
+
+Cukup berikan sebuah <b>topik</b> atau <b>kata kunci</b>, sistem akan secara otomatis menghasilkan naskah video, materi video, subtitle video, dan musik latar belakang, kemudian menggabungkannya menjadi video pendek HD siap upload!
 
 <h4>Antarmuka Web</h4>
 

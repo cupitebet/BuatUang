@@ -1,6 +1,8 @@
-# 🚀 Panduan Setup MoneyPrinterTurbo
+# 🚀 Panduan Setup Buat Uang
 
-Dokumentasi lengkap setup dan penggunaan MoneyPrinterTurbo untuk pemula.
+Dokumentasi lengkap setup dan penggunaan **Buat Uang** (Generator Video Otomatis dengan AI) untuk pemula.
+
+> Berbasis MoneyPrinterTurbo
 
 ---
 
