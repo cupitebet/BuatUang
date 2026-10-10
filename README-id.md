@@ -21,6 +21,8 @@
 
 Cukup berikan sebuah <b>topik</b> atau <b>kata kunci</b>, sistem akan secara otomatis menghasilkan naskah video, materi video, subtitle video, dan musik latar belakang, kemudian menggabungkannya menjadi video pendek HD siap upload!
 
+💸 **Bisa dipakai 100% gratis.** Baca [PANDUAN-GRATIS-DAN-KUALITAS.md](PANDUAN-GRATIS-DAN-KUALITAS.md) untuk pilihan tanpa kredit API, ekspektasi kualitas, dan tips monetisasi.
+
 <h4>Antarmuka Web</h4>
 
 ![](docs/webui-en.jpg)
@@ -368,7 +370,10 @@ Klik untuk melihat file [`LICENSE`](LICENSE)
    - **DeepSeek** (Recommended) - Murah, cepat, kualitas bagus
    - **OpenAI** - Kualitas terbaik, tapi berbayar
    - **Google Gemini** - Ada free tier
-   - **g4f** - Gratis tapi tidak stabil
+   - **Ollama** - Gratis, jalan di komputer sendiri
+   - Tanpa API sama sekali: tulis naskah di ChatGPT/Claude lalu tempel ke WebUI
+
+   📖 Cara memakai Buat Uang 100% gratis dan ekspektasi kualitasnya: **[PANDUAN-GRATIS-DAN-KUALITAS.md](PANDUAN-GRATIS-DAN-KUALITAS.md)**
 
 2. **Video Material**:
    - **Pexels** (Recommended) - Gratis, HD, bebas royalti

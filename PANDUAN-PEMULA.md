@@ -3,18 +3,21 @@
 **Panduan ini dibuat khusus untuk pemula yang ingin membuat video otomatis dengan AI, tanpa perlu pengetahuan teknis yang mendalam.**
 
 > **Buat Uang** adalah generator video otomatis berbasis AI (MoneyPrinterTurbo) yang sudah dilokalisasi untuk Indonesia.
+>
+> 💸 Mau tanpa biaya sama sekali, atau penasaran seberapa bagus hasilnya? Baca **[PANDUAN-GRATIS-DAN-KUALITAS.md](PANDUAN-GRATIS-DAN-KUALITAS.md)**.
 
 ---
 
 ## 📋 Daftar Isi
 
-1. [Apa itu MoneyPrinterTurbo?](#apa-itu-moneyprinterturbo)
-2. [Spesifikasi Komputer](#spesifikasi-komputer)
-3. [Alat dan Bahan yang Dibutuhkan](#alat-dan-bahan-yang-dibutuhkan)
-4. [Cara Install - Step by Step](#cara-install-step-by-step)
-5. [Cara Menggunakan](#cara-menggunakan)
-6. [Troubleshooting](#troubleshooting)
-7. [FAQ - Pertanyaan Umum](#faq-pertanyaan-umum)
+1. [Apa itu Buat Uang?](#-apa-itu-buat-uang)
+2. [Spesifikasi Komputer](#-spesifikasi-komputer)
+3. [Alat dan Bahan yang Dibutuhkan](#-alat-dan-bahan-yang-dibutuhkan)
+4. [Cara Install - Step by Step](#-cara-install---step-by-step)
+5. [Cara Menggunakan](#-cara-menggunakan)
+6. [Troubleshooting](#-troubleshooting)
+7. [FAQ - Pertanyaan Umum](#-faq---pertanyaan-umum)
+8. [Biaya & Kualitas Video (panduan terpisah)](PANDUAN-GRATIS-DAN-KUALITAS.md)
 
 ---
 
@@ -396,11 +399,9 @@ ffmpeg_path = "C:\\path\\to\\ffmpeg.exe"
 
 ### Q1: Berapa biaya untuk membuat 1 video?
 
-**A:** Tergantung provider LLM:
-- **Google Gemini (gratis):** Rp 0
-- **DeepSeek:** ~Rp 50-100 per video
-- **OpenAI:** ~Rp 200-500 per video
-- **Pexels (video material):** GRATIS selamanya!
+**A:** Bisa **Rp 0**. Klip (Pexels), suara (Edge TTS), dan subtitle gratis. Yang mungkin berbayar hanya AI penulis naskah, dan itu pun ada beberapa cara gratis: copy-paste naskah dari langganan ChatGPT/Claude, Ollama, atau Gemini free tier. Kalau memakai API berbayar seperti DeepSeek atau OpenAI, biaya per video sangat kecil karena naskahnya pendek.
+
+📖 Detail lengkap: **[PANDUAN-GRATIS-DAN-KUALITAS.md](PANDUAN-GRATIS-DAN-KUALITAS.md)**
 
 ---
 
@@ -446,12 +447,13 @@ ffmpeg_path = "C:\\path\\to\\ffmpeg.exe"
 
 ### Q6: Apakah legal untuk monetisasi?
 
-**A:** ✅ YES!
-- Video material dari Pexels/Pixabay: bebas royalti
-- Voice dari Edge TTS: boleh digunakan komersial
-- Script dari AI: Anda yang punya hak cipta
+**A:** Sebagian besar komponennya aman, tapi ada yang perlu diperhatikan:
+- ✅ **Klip Pexels/Pixabay:** boleh dipakai komersial sesuai lisensinya.
+- ⚠️ **Suara Edge TTS:** gratis, tapi diambil dari layanan baca-teks browser Edge secara tidak resmi, dan **tidak ada lisensi komersial yang jelas**. Untuk channel yang dimonetisasi, opsi yang aman secara lisensi adalah **Azure Speech** (berbayar, sudah didukung aplikasi ini) atau suaramu sendiri.
+- ⚠️ **Naskah dari AI:** status hak ciptanya masih diperdebatkan. Edit dan tambahkan isi sendiri.
+- ⚠️ **Aturan platform:** YouTube dan lainnya memperketat monetisasi untuk konten yang diproduksi massal/berulang.
 
-**Catatan:** Cek terms & conditions masing-masing platform tempat upload.
+📖 Penjelasan lengkap: **[PANDUAN-GRATIS-DAN-KUALITAS.md §7](PANDUAN-GRATIS-DAN-KUALITAS.md#7-monetisasi--aturan-platform)**
 
 ---
 
@@ -467,10 +469,11 @@ ffmpeg_path = "C:\\path\\to\\ffmpeg.exe"
 
 ### Q8: Berapa video maksimal per hari?
 
-**A:** Tergantung limit API:
-- **Pexels:** 200 request/jam (bisa ratusan video)
-- **Google Gemini:** ~50-100 video/hari (gratis)
-- **DeepSeek/OpenAI:** Unlimited (bayar per usage)
+**A:** Tergantung limit masing-masing layanan, yang bisa berubah sewaktu-waktu:
+- **Pexels:** ada batas request per jam/bulan untuk API key gratis (cek di dashboard Pexels)
+- **Gemini free tier:** ada batas request per menit/hari (cek di Google AI Studio)
+- **Naskah copy-paste / Ollama:** tidak ada batas dari sisi AI
+- **DeepSeek/OpenAI:** tergantung saldo (bayar per pemakaian)
 
 ---
 
