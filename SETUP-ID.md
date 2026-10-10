@@ -6,24 +6,18 @@ Dokumentasi lengkap setup dan penggunaan **Buat Uang** (Generator Video Otomatis
 
 ---
 
-## ✅ Status Setup Saat Ini
+## ✅ Kebutuhan & Konfigurasi yang Disarankan
 
-### Dependencies Terinstall
-- ✅ Python 3.11.14
-- ✅ MoviePy 2.1.2
-- ✅ Streamlit 1.45.0
-- ✅ FastAPI 0.115.6
-- ✅ OpenAI SDK 1.56.1
-- ✅ Edge TTS 6.1.19
-- ✅ Faster Whisper 1.1.0
-- ✅ Google Generative AI 0.8.3
-- ✅ Dan 100+ dependencies lainnya
+### Kebutuhan
+- **Python 3.11** (64-bit). Versi yang lebih baru belum tentu didukung semua paket.
+- `pip install -r requirements.txt`. **ImageMagick tidak perlu diinstal.**
+- Opsional, hanya untuk subtitle mode whisper: `pip install -r requirements-whisper.txt`
 
-### Konfigurasi Aktif
-- ✅ **Pexels API**: Configured (1 API key)
-- ✅ **LLM Provider**: g4f (GPT4Free - Gratis)
-- ✅ **Voice/TTS**: Edge TTS (Gratis)
-- ✅ **Subtitle**: Edge (Gratis)
+### Konfigurasi Awal (gratis)
+- **Pexels API key** (gratis): wajib, untuk klip video
+- **Naskah:** copy-paste dari ChatGPT/Claude, **Ollama**, atau **Gemini free tier**. Lihat **[PANDUAN-GRATIS-DAN-KUALITAS.md](PANDUAN-GRATIS-DAN-KUALITAS.md)**
+- **Voice/TTS:** Edge TTS (gratis)
+- **Subtitle:** `edge` (gratis)
 
 ---
 
@@ -106,7 +100,7 @@ Tidak perlu diinstal. Versi ini (moviepy 2.x) merender subtitle dengan Pillow.
 
 ### Error: "LLM API Error"
 
-Jika pakai **g4f** dan error, coba ganti provider:
+Kalau masih memakai **g4f**, ganti provider: g4f sudah tidak berfungsi (error *"No provider found"*) dan melanggar ketentuan layanan penyedia AI. Pilihan gratis ada di [PANDUAN-GRATIS-DAN-KUALITAS.md](PANDUAN-GRATIS-DAN-KUALITAS.md#3-cara-gratis-mendapatkan-naskah). Pilihan berbayar:
 
 1. **Pakai DeepSeek** (Recommended):
    - Daftar: https://platform.deepseek.com/
@@ -168,8 +162,8 @@ Untuk voice lengkap, lihat: `docs/voice-list.txt`
 - Gunakan **local materials** untuk video yang sering dipakai
 
 ### 3. Optimasi Kualitas
-- **g4f** gratis tapi kadang tidak stabil → Upgrade ke DeepSeek ($2 = 1M tokens)
-- **Edge TTS** cukup bagus → Upgrade ke Azure Speech untuk suara lebih natural
+- **Naskah gratis** lewat copy-paste dari ChatGPT/Claude kualitasnya sudah terbaik; DeepSeek API murah kalau mau otomatis penuh
+- **Edge TTS** cukup bagus → Upgrade ke Azure Speech untuk suara lebih natural dan berlisensi komersial
 - **Edge subtitle** cepat → Pakai Whisper untuk subtitle lebih akurat
 
 ---
