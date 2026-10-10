@@ -124,9 +124,9 @@ Picwish berfokus pada **bidang pemrosesan gambar**, menyediakan berbagai **alat 
 ## Memulai Cepat 🚀
 
 ### Jalankan di Google Colab
-Hindari konfigurasi environment lokal, klik untuk langsung mencoba MoneyPrinterTurbo di Google Colab
+Tidak punya PC khusus? Jalankan Buat Uang (termasuk Clipper) gratis di Google Colab lewat browser. Notebook memandu langkahnya: simpan API key di Secrets, instal, hubungkan Google Drive (untuk hasil dan video besar), lalu buka WebUI lewat link Cloudflare tanpa perlu akun.
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/harry0703/MoneyPrinterTurbo/blob/main/docs/MoneyPrinterTurbo.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cupitebet/BuatUang/blob/main/docs/BuatUang-Colab.ipynb)
 
 ### Paket Startup Satu Klik Windows
 

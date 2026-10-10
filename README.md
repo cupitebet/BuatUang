@@ -121,7 +121,7 @@
 ### 在 Google Colab 中运行
 免去本地环境配置，点击直接在 Google Colab 中快速体验 MoneyPrinterTurbo
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/harry0703/MoneyPrinterTurbo/blob/main/docs/MoneyPrinterTurbo.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cupitebet/BuatUang/blob/main/docs/BuatUang-Colab.ipynb)
 
 
 ### Windows一键启动包
