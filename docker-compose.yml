@@ -1,6 +1,11 @@
 x-common-volumes: &common-volumes
   - ./:/MoneyPrinterTurbo
 
+# Supaya container bisa memanggil Ollama di komputer host lewat http://host.docker.internal:11434.
+# Docker Desktop sudah menyediakan nama ini; Docker Engine di Linux butuh pemetaan ini.
+x-host-gateway: &host-gateway
+  - "host.docker.internal:host-gateway"
+
 # Port hanya dibuka di 127.0.0.1 (komputer ini saja). Untuk diakses dari jaringan lain,
 # isi `api_key` di config.toml dulu, lalu hapus prefix "127.0.0.1:" di bawah.
 services:
@@ -13,6 +18,7 @@ services:
       - "127.0.0.1:8501:8501"
     command: [ "streamlit", "run", "./webui/Main.py","--browser.serverAddress=127.0.0.1","--server.enableCORS=True","--browser.gatherUsageStats=False" ]
     volumes: *common-volumes
+    extra_hosts: *host-gateway
     restart: always
   api:
     build:
@@ -23,4 +29,5 @@ services:
       - "127.0.0.1:8080:8080"
     command: [ "python3", "main.py" ]
     volumes: *common-volumes
+    extra_hosts: *host-gateway
     restart: always

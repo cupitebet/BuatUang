@@ -122,7 +122,14 @@ Aplikasi **tidak memanggil AI sama sekali** jika kolom **Video Script** *dan* **
    ollama_base_url = "http://localhost:11434/v1"
    ollama_model_name = "qwen2.5:7b"
    ```
-4. **Kalau Buat Uang dijalankan lewat Docker**, isi Base Url dengan `http://host.docker.internal:11434/v1`.
+4. **Kalau Buat Uang dijalankan lewat Docker** (`docker compose up`), isi Base Url dengan `http://host.docker.internal:11434/v1`. `docker-compose.yml` repo ini sudah memetakan nama itu ke komputer host.
+   - **Docker Desktop (Windows/Mac):** langsung jalan.
+   - **Docker di Linux:** Ollama secara default hanya menerima koneksi dari `127.0.0.1`, jadi container tidak bisa menjangkaunya. Jalankan Ollama dengan `OLLAMA_HOST=0.0.0.0` (untuk service systemd: `sudo systemctl edit ollama`, tambahkan `Environment="OLLAMA_HOST=0.0.0.0"`, lalu `sudo systemctl restart ollama`). Setelah itu port 11434 terbuka ke jaringan. Kalau server bisa diakses dari internet, **izinkan port itu hanya dari jaringan Docker**, misalnya dengan UFW (urutan perintah penting, aturan `allow` harus lebih dulu):
+     ```bash
+     sudo ufw allow from 172.16.0.0/12 to any port 11434
+     sudo ufw deny 11434
+     ```
+   - **Menjalankan dengan `docker run` (bukan compose):** tambahkan `--add-host=host.docker.internal:host-gateway`.
 5. Klik *Generate Video Script and Keywords* untuk menguji. Kalau naskahnya kurang bagus, edit langsung di kolom sebelum klik **Generate Video**.
 
 ### Opsi C — Gemini API free tier
