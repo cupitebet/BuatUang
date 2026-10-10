@@ -244,7 +244,8 @@ async def stream_video(request: Request, file_path: str):
             range_ = range_header.split("bytes=")[1]
             start, end = [int(part) if part else None for part in range_.split("-")]
             if start is None:
-                start = video_size - end
+                # suffix range (bytes=-N); N melebihi ukuran file berarti seluruh file (RFC 7233)
+                start = max(0, video_size - end)
                 end = video_size - 1
             if end is None or end >= video_size:
                 end = video_size - 1

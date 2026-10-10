@@ -47,6 +47,10 @@ class TestApiSecurity(unittest.TestCase):
         self.assertEqual((r.status_code, r.content), (200, b"0123456789"))
         r = self.client.get(f"/api/v1/stream/{self.task_id}/final-1.mp4", headers={"Range": "bytes=2-5"})
         self.assertEqual((r.status_code, r.content), (206, b"2345"))
+        r = self.client.get(f"/api/v1/stream/{self.task_id}/final-1.mp4", headers={"Range": "bytes=-3"})
+        self.assertEqual((r.status_code, r.content), (206, b"789"))
+        r = self.client.get(f"/api/v1/stream/{self.task_id}/final-1.mp4", headers={"Range": "bytes=-10000"})
+        self.assertEqual((r.status_code, r.content), (206, b"0123456789"))
         r = self.client.get(f"/api/v1/stream/{self.task_id}/final-1.mp4", headers={"Range": "bytes=abc"})
         self.assertEqual(r.status_code, 416)
 
