@@ -169,7 +169,8 @@ max_concurrent_tasks = 5
 
 
 [whisper]
-# Only effective when subtitle_provider is "whisper"
+# Used when subtitle_provider is "whisper" and by the Clipper page.
+# On CPU, "large-v3" is slow for long videos; "small" or "medium" is much faster with lower accuracy.
 
 # Run on GPU with FP16
 # model = WhisperModel(model_size, device="cuda", compute_type="float16")

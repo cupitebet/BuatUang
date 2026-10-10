@@ -14,7 +14,8 @@ compute_type = config.whisper.get("compute_type", "int8")
 model = None
 
 
-def create(audio_file, subtitle_file: str = ""):
+def _load_model():
+    """Muat model Whisper sekali. None jika faster-whisper tidak terpasang atau model gagal dimuat."""
     global model
     if not model:
         try:
@@ -51,13 +52,19 @@ def create(audio_file, subtitle_file: str = ""):
                 f"********************************************\n\n"
             )
             return None
+    return model
 
-    logger.info(f"start, output file: {subtitle_file}")
-    if not subtitle_file:
-        subtitle_file = f"{audio_file}.srt"
+
+def transcribe(media_file: str) -> list[dict] | None:
+    """Transkripsi audio/video menjadi kalimat bertimestamp: [{msg, start_time, end_time}, ...].
+
+    None jika Whisper tidak tersedia.
+    """
+    if _load_model() is None:
+        return None
 
     segments, info = model.transcribe(
-        audio_file,
+        media_file,
         beam_size=5,
         word_timestamps=True,
         vad_filter=True,
@@ -128,7 +135,20 @@ def create(audio_file, subtitle_file: str = ""):
 
     diff = end - start
     logger.info(f"complete, elapsed: {diff:.2f} s")
+    return subtitles
 
+
+def create(audio_file, subtitle_file: str = ""):
+    if not subtitle_file:
+        subtitle_file = f"{audio_file}.srt"
+    logger.info(f"start, output file: {subtitle_file}")
+    subtitles = transcribe(audio_file)
+    if subtitles is None:
+        return None
+    write_srt(subtitles, subtitle_file)
+
+
+def write_srt(subtitles: list[dict], subtitle_file: str) -> None:
     idx = 1
     lines = []
     for subtitle in subtitles:
