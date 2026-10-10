@@ -21,6 +21,8 @@
 
 Cukup berikan sebuah <b>topik</b> atau <b>kata kunci</b>, sistem akan secara otomatis menghasilkan naskah video, materi video, subtitle video, dan musik latar belakang, kemudian menggabungkannya menjadi video pendek HD siap upload!
 
+✂️ **Baru: Clipper.** Potong podcast/live jadi klip vertikal bersubtitle dari link YouTube atau file lokal. Lihat [PANDUAN-CLIPPER.md](PANDUAN-CLIPPER.md).
+
 💸 **Bisa dipakai 100% gratis.** Baca [PANDUAN-GRATIS-DAN-KUALITAS.md](PANDUAN-GRATIS-DAN-KUALITAS.md) untuk pilihan tanpa kredit API, ekspektasi kualitas, dan tips monetisasi.
 
 <h4>Antarmuka Web</h4>
