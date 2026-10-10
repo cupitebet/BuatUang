@@ -84,6 +84,9 @@ Video privat, video dengan batas usia, atau video yang butuh login bisa tetap ga
 ### Transkrip sangat panjang
 Untuk video sangat panjang, transkrip dibagi menjadi beberapa bagian sebelum dikirim ke AI, lalu kandidat terbaik dari semua bagian digabung berdasarkan skor. Model lokal kecil (Ollama) dengan konteks pendek bisa menghasilkan pilihan yang kurang bagus. Kalau begitu, pakai Gemini atau model yang lebih besar.
 
+### Menjalankan di Google Colab
+Notebook `docs/BuatUang-Colab.ipynb` (tombol **Open in Colab** di README) memakai GPU gratis Colab, sehingga Whisper jauh lebih cepat. Unggah video besar ke Google Drive dulu, lalu di Clipper pilih **File lokal (path)** dengan path seperti `/content/drive/MyDrive/Podcast/episode-01.mp4`.
+
 ### Menjalankan lewat Docker
 Di dalam container, **File lokal (path)** hanya bisa membaca file di dalam folder repo (dipasang sebagai `/MoneyPrinterTurbo`). Taruh video di folder `storage/` lalu tulis path seperti `/MoneyPrinterTurbo/storage/episode-01.mp4`.
 

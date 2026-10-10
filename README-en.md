@@ -123,7 +123,7 @@ Picwish focuses on the **image processing field**, providing a rich set of **ima
 ### Run in Google Colab 
 Want to try MoneyPrinterTurbo without setting up a local environment? Run it directly in Google Colab!
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/harry0703/MoneyPrinterTurbo/blob/main/docs/MoneyPrinterTurbo.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cupitebet/BuatUang/blob/main/docs/BuatUang-Colab.ipynb)
 
 
 ### Windows
