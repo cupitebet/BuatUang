@@ -30,9 +30,7 @@ from app.services import state as sm
 from app.services import task as tm
 from app.utils import utils
 
-# 认证依赖项
-# router = new_router(dependencies=[Depends(base.verify_token)])
-router = new_router()
+router = new_router(dependencies=[Depends(base.verify_token)])
 
 _enable_redis = config.app.get("enable_redis", False)
 _redis_host = config.app.get("redis_host", "localhost")
@@ -131,7 +129,7 @@ def get_task(
 
         def file_to_uri(file):
             if not file.startswith(endpoint):
-                _uri_path = v.replace(task_dir, "tasks").replace("\\", "/")
+                _uri_path = file.replace(task_dir, "tasks").replace("\\", "/")
                 _uri_path = f"{endpoint}/{_uri_path}"
             else:
                 _uri_path = file
@@ -206,10 +204,11 @@ def get_bgm_list(request: Request):
 )
 def upload_bgm_file(request: Request, file: UploadFile = File(...)):
     request_id = base.get_task_id(request)
-    # check file ext
-    if file.filename.endswith("mp3"):
+    # basename() membuang komponen direktori agar file tidak bisa ditulis di luar song_dir
+    filename = os.path.basename((file.filename or "").replace("\\", "/"))
+    if filename.lower().endswith(".mp3") and not filename.startswith("."):
         song_dir = utils.song_dir()
-        save_path = os.path.join(song_dir, file.filename)
+        save_path = os.path.join(song_dir, filename)
         # save file
         with open(save_path, "wb+") as buffer:
             # If the file already exists, it will be overwritten
@@ -223,23 +222,38 @@ def upload_bgm_file(request: Request, file: UploadFile = File(...)):
     )
 
 
+def _task_file(request: Request, file_path: str) -> str:
+    path = utils.safe_join(utils.task_dir(), file_path)
+    if not path or not os.path.isfile(path):
+        raise HttpException(
+            task_id=base.get_task_id(request), status_code=404, message="file not found"
+        )
+    return path
+
+
 @router.get("/stream/{file_path:path}")
 async def stream_video(request: Request, file_path: str):
-    tasks_dir = utils.task_dir()
-    video_path = os.path.join(tasks_dir, file_path)
+    video_path = _task_file(request, file_path)
     range_header = request.headers.get("Range")
     video_size = os.path.getsize(video_path)
     start, end = 0, video_size - 1
 
     length = video_size
     if range_header:
-        range_ = range_header.split("bytes=")[1]
-        start, end = [int(part) if part else None for part in range_.split("-")]
-        if start is None:
-            start = video_size - end
-            end = video_size - 1
-        if end is None:
-            end = video_size - 1
+        try:
+            range_ = range_header.split("bytes=")[1]
+            start, end = [int(part) if part else None for part in range_.split("-")]
+            if start is None:
+                start = video_size - end
+                end = video_size - 1
+            if end is None or end >= video_size:
+                end = video_size - 1
+            if not 0 <= start <= end:
+                raise ValueError
+        except (IndexError, ValueError, TypeError):
+            raise HttpException(
+                task_id=base.get_task_id(request), status_code=416, message="invalid range"
+            )
         length = end - start + 1
 
     def file_iterator(file_path, offset=0, bytes_to_read=None):
@@ -266,15 +280,14 @@ async def stream_video(request: Request, file_path: str):
 
 
 @router.get("/download/{file_path:path}")
-async def download_video(_: Request, file_path: str):
+async def download_video(request: Request, file_path: str):
     """
     download video
-    :param _: Request request
+    :param request: Request request
     :param file_path: video file path, eg: /cd1727ed-3473-42a2-a7da-4faafafec72b/final-1.mp4
     :return: video file
     """
-    tasks_dir = utils.task_dir()
-    video_path = os.path.join(tasks_dir, file_path)
+    video_path = _task_file(request, file_path)
     file_path = pathlib.Path(video_path)
     filename = file_path.stem
     extension = file_path.suffix

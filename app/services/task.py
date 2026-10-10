@@ -25,7 +25,8 @@ def generate_script(task_id, params):
     else:
         logger.debug(f"video script: \n{video_script}")
 
-    if not video_script:
+    # llm.generate_script mengembalikan "Error: ..." saat gagal; jangan dibacakan sebagai naskah
+    if not video_script or video_script.startswith("Error: "):
         sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
         logger.error("failed to generate video script.")
         return None
@@ -50,7 +51,8 @@ def generate_terms(task_id, params, video_script):
 
         logger.debug(f"video terms: {utils.to_json(video_terms)}")
 
-    if not video_terms:
+    # llm.generate_terms mengembalikan string "Error: ..." (bukan list) saat gagal
+    if not video_terms or isinstance(video_terms, str):
         sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
         logger.error("failed to generate video terms.")
         return None

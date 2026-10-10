@@ -1,3 +1,4 @@
+import hmac
 from uuid import uuid4
 
 from fastapi import Request
@@ -19,13 +20,14 @@ def get_api_key(request: Request):
 
 
 def verify_token(request: Request):
-    token = get_api_key(request)
-    if token != config.app.get("api_key", ""):
-        request_id = get_task_id(request)
-        request_url = request.url
-        user_agent = request.headers.get("user-agent")
+    """Wajibkan header x-api-key jika `api_key` diisi di config.toml; tanpa api_key API tetap terbuka."""
+    expected = str(config.app.get("api_key", "") or "")
+    if not expected:
+        return
+    token = get_api_key(request) or ""
+    if not hmac.compare_digest(token.encode(), expected.encode()):
         raise HttpException(
-            task_id=request_id,
+            task_id=get_task_id(request),
             status_code=401,
-            message=f"invalid token: {request_url}, {user_agent}",
+            message="invalid or missing x-api-key",
         )

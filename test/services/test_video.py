@@ -1,7 +1,9 @@
 
 import unittest
 import os
+import shutil
 import sys
+import tempfile
 from pathlib import Path
 from moviepy import (
     VideoFileClip,
@@ -25,9 +27,12 @@ class TestVideoService(unittest.TestCase):
         if not os.path.exists(self.test_img_path):
             self.fail(f"test image not found: {self.test_img_path}")
         
-        # test preprocess_video function
+        # salin ke folder sementara: preprocess_video menulis <gambar>.mp4 di sebelah gambar,
+        # dan pembersihan di bawah dulu menghapus test/resources/1.png.mp4 yang dipakai test lain
+        tmp_dir = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp_dir, True)
         m = MaterialInfo()
-        m.url = self.test_img_path
+        m.url = shutil.copy(self.test_img_path, tmp_dir)
         m.provider = "local"
         print(m)
         
@@ -50,7 +55,7 @@ class TestVideoService(unittest.TestCase):
     def test_wrap_text(self):
         """test text wrapping function"""
         try:
-            font_path = os.path.join(utils.font_dir(), "STHeitiMedium.ttc")
+            font_path = os.path.join(utils.font_dir(), "NotoSans-Bold.ttf")
             if not os.path.exists(font_path):
                 self.fail(f"font file not found: {font_path}")
                 

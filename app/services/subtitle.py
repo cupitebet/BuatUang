@@ -3,7 +3,6 @@ import os.path
 import re
 from timeit import default_timer as timer
 
-from faster_whisper import WhisperModel
 from loguru import logger
 
 from app.config import config
@@ -18,6 +17,18 @@ model = None
 def create(audio_file, subtitle_file: str = ""):
     global model
     if not model:
+        try:
+            # Opsional: faster-whisper menarik onnxruntime yang sering gagal dipasang di Windows /
+            # Python terbaru, padahal hanya dibutuhkan untuk subtitle_provider = "whisper".
+            from faster_whisper import WhisperModel
+        except ImportError:
+            logger.error(
+                "faster-whisper is not installed, cannot create subtitles with whisper. "
+                "Install it with: pip install -r requirements-whisper.txt "
+                "(or set subtitle_provider = \"edge\" in config.toml)"
+            )
+            return None
+
         model_path = f"{utils.root_dir()}/models/whisper-{model_size}"
         model_bin_file = f"{model_path}/model.bin"
         if not os.path.isdir(model_path) or not os.path.isfile(model_bin_file):

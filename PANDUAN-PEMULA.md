@@ -100,28 +100,7 @@ Lihat: [SOLUSI-ERROR-WINDOWS.md](SOLUSI-ERROR-WINDOWS.md)
 - Mac: Sudah built-in atau `brew install git`
 - Linux: `sudo apt install git`
 
-#### C. ImageMagick (Gratis)
-**Apa itu?** Tool untuk membuat subtitle di video.
-
-**Download Windows:**
-1. Kunjungi: https://imagemagick.org/script/download.php
-2. Pilih: `ImageMagick-7.1.1-32-Q16-x64-static.exe` (HARUS yang static!)
-3. Install ke lokasi default
-4. JANGAN ubah path instalasi!
-
-**Download Mac:**
-```bash
-brew install imagemagick
-```
-
-**Download Linux:**
-```bash
-# Ubuntu/Debian
-sudo apt-get install imagemagick
-
-# CentOS/Fedora
-sudo yum install ImageMagick
-```
+> **ImageMagick tidak perlu diinstal.** Panduan lama mewajibkannya, tapi versi ini merender subtitle dengan Pillow (sudah ikut terpasang lewat `pip`). Font subtitle bawaan juga sudah tersedia.
 
 ---
 
@@ -206,12 +185,6 @@ sudo yum install ImageMagick
 **2. Install Git**
 ```bash
 # Download dari: https://git-scm.com/
-```
-
-**3. Install ImageMagick**
-```bash
-# Download dari: https://imagemagick.org/script/download.php
-# Pilih versi "static"
 ```
 
 ---
@@ -366,18 +339,13 @@ python main.py
 
 ### ⚠️ ERROR WINDOWS: "Could not find a version that satisfies the requirement onnxruntime"
 
-**Penyebab:** Python yang terinstall adalah versi 32-bit (harus 64-bit)
+`onnxruntime` hanya dibutuhkan oleh subtitle mode **whisper**, yang sekarang **opsional** dan tidak ikut di `requirements.txt`. Instalasi standar (`pip install -r requirements.txt`) tidak lagi memasang paket ini.
 
-**Solusi Lengkap:** 📖 **[Baca SOLUSI-ERROR-WINDOWS.md](SOLUSI-ERROR-WINDOWS.md)**
+Error ini hanya muncul kalau kamu menjalankan `pip install -r requirements-whisper.txt`. Penyebabnya biasanya:
+- **Versi Python terlalu baru** (misalnya 3.14), sehingga `onnxruntime` belum menyediakan paket untuk versi itu. Pakai **Python 3.11**.
+- **Python 32-bit.** Pakai versi 64-bit (`python-3.11.x-amd64.exe`).
 
-**Quick Fix:**
-1. Uninstall Python 32-bit
-2. Download Python 64-bit: https://www.python.org/downloads/
-   - Pilih file: `python-3.11.x-amd64.exe`
-3. Install dengan centang "Add Python to PATH"
-4. Cek: `python -c "import platform; print(platform.architecture())"`
-   - Harus: `('64bit', ...)` ✅
-5. Install ulang: `pip install -r requirements.txt`
+Detail lengkap: 📖 **[SOLUSI-ERROR-WINDOWS.md](SOLUSI-ERROR-WINDOWS.md)**
 
 ---
 
@@ -393,19 +361,7 @@ python --version
 
 ---
 
-### Problem 2: "ImageMagick not found"
-
-**Solusi:**
-```bash
-# Download ImageMagick versi STATIC
-# Install ke lokasi default
-# Edit config.toml:
-imagemagick_path = "C:\\Program Files\\ImageMagick-7.1.1-Q16\\magick.exe"
-```
-
----
-
-### Problem 3: "No ffmpeg found"
+### Problem 2: "No ffmpeg found"
 
 **Solusi:**
 ```bash
@@ -417,7 +373,7 @@ ffmpeg_path = "C:\\path\\to\\ffmpeg.exe"
 
 ---
 
-### Problem 4: "API Key Invalid"
+### Problem 3: "API Key Invalid"
 
 **Solusi:**
 1. Cek API key sudah benar (tidak ada spasi)
@@ -426,7 +382,7 @@ ffmpeg_path = "C:\\path\\to\\ffmpeg.exe"
 
 ---
 
-### Problem 5: "Video Generation Failed"
+### Problem 4: "Video Generation Failed"
 
 **Solusi:**
 1. Cek koneksi internet

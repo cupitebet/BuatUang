@@ -228,3 +228,15 @@ def load_locales(i18n_dir):
 
 def parse_extension(filename):
     return Path(filename).suffix.lower().lstrip('.')
+
+
+def safe_join(base_dir: str, user_path: str) -> str | None:
+    """Gabungkan path dari request ke base_dir; None jika hasilnya keluar dari base_dir.
+
+    Menolak `..`, path absolut (os.path.join akan membuang base_dir), dan symlink ke luar.
+    """
+    base = os.path.realpath(base_dir)
+    target = os.path.realpath(os.path.join(base, user_path.lstrip("/\\")))
+    if os.path.commonpath([base, target]) != base:
+        return None
+    return target

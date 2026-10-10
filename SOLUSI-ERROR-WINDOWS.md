@@ -1,5 +1,7 @@
 # ⚠️ SOLUSI ERROR INSTALASI WINDOWS
 
+> **Update:** `faster-whisper` (yang menarik `onnxruntime`) sekarang **opsional** dan sudah dikeluarkan dari `requirements.txt`. Instalasi standar `pip install -r requirements.txt` tidak lagi memicu error di bawah. Panduan ini hanya relevan kalau kamu memasang subtitle mode whisper lewat `pip install -r requirements-whisper.txt`. Gunakan **Python 3.11 64-bit**; Python 3.13/3.14 belum tentu didukung semua paket.
+
 ## Error: "Could not find a version that satisfies the requirement onnxruntime"
 
 ### 🔍 Penyebab Error:

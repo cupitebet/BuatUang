@@ -100,27 +100,9 @@ ffmpeg_path = "C:\\path\\to\\ffmpeg.exe"  # Windows
 ffmpeg_path = "/usr/local/bin/ffmpeg"     # Linux/Mac
 ```
 
-### Error: "ImageMagick not found"
+### ImageMagick
 
-**Windows**:
-1. Download: https://imagemagick.org/archive/binaries/ImageMagick-7.1.1-32-Q16-x64-static.exe
-2. Install (JANGAN ubah path)
-3. Edit `config.toml`:
-```toml
-imagemagick_path = "C:\\Program Files\\ImageMagick-7.1.1-Q16\\magick.exe"
-```
-
-**Linux**:
-```bash
-sudo apt-get install imagemagick  # Ubuntu/Debian
-# atau
-sudo yum install ImageMagick      # CentOS
-```
-
-**MacOS**:
-```bash
-brew install imagemagick
-```
+Tidak perlu diinstal. Versi ini (moviepy 2.x) merender subtitle dengan Pillow.
 
 ### Error: "LLM API Error"
 
