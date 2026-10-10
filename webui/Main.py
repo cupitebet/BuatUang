@@ -349,7 +349,7 @@ if not config.app.get("hide_config", False):
 
             if llm_provider == "gemini":
                 if not llm_model_name:
-                    llm_model_name = "gemini-1.0-pro"
+                    llm_model_name = "gemini-flash-latest"
 
                 with llm_helper:
                     tips = """
@@ -357,7 +357,7 @@ if not config.app.get("hide_config", False):
                             > 需要VPN开启全局流量模式
                             - **API Key**: [点击到官网申请](https://ai.google.dev/)
                             - **Base Url**: 留空
-                            - **Model Name**: 比如 gemini-1.0-pro
+                            - **Model Name**: 比如 gemini-flash-latest
                             """
 
             if llm_provider == "deepseek":
@@ -852,7 +852,7 @@ with right_panel:
         st.write(tr("Subtitle Settings"))
         params.subtitle_enabled = st.checkbox(tr("Enable Subtitles"), value=True)
         font_names = get_all_fonts()
-        saved_font_name = config.ui.get("font_name", "MicrosoftYaHeiBold.ttc")
+        saved_font_name = config.ui.get("font_name", "NotoSans-Bold.ttf")
         saved_font_name_index = 0
         if saved_font_name in font_names:
             saved_font_name_index = font_names.index(saved_font_name)

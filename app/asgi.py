@@ -58,7 +58,9 @@ origins = cors_allowed_origins_str.split(",") if cors_allowed_origins_str else [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,
+    # API memakai header x-api-key, bukan cookie. Dengan origin "*", credentials=True membuat
+    # Starlette memantulkan origin apa pun, sehingga situs mana pun bisa memanggil API ini.
+    allow_credentials=origins != ["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -80,3 +82,8 @@ def shutdown_event():
 @app.on_event("startup")
 def startup_event():
     logger.info("startup event")
+    if not config.app.get("api_key") and config.listen_host not in ("127.0.0.1", "localhost"):
+        logger.warning(
+            f"API listening on {config.listen_host} without api_key: anyone who can reach "
+            "this port can generate videos with your API keys. Set api_key in config.toml."
+        )

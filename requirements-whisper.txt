@@ -1,0 +1,4 @@
+# Opsional: hanya untuk subtitle_provider = "whisper" (lebih akurat, lebih lambat, model ~3GB).
+# Butuh onnxruntime, yang belum tentu tersedia untuk versi Python terbaru di Windows.
+-r requirements.txt
+faster-whisper==1.1.0

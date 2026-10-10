@@ -4,8 +4,10 @@ import os
 import random
 import gc
 import shutil
+import subprocess
 from typing import List
 from loguru import logger
+from moviepy.config import FFMPEG_BINARY
 from moviepy import (
     AudioFileClip,
     ColorClip,
@@ -109,9 +111,29 @@ def get_bgm_file(bgm_type: str = "random", bgm_file: str = ""):
         suffix = "*.mp3"
         song_dir = utils.song_dir()
         files = glob.glob(os.path.join(song_dir, suffix))
+        if not files:
+            logger.warning(f"no background music found in {song_dir}, video will have no bgm")
+            return ""
         return random.choice(files)
 
     return ""
+
+
+DEFAULT_FONT = "NotoSans-Bold.ttf"
+
+
+def resolve_font(font_name: str | None) -> str:
+    """Path font subtitle; jatuh ke DEFAULT_FONT lalu font apa pun yang ada jika tidak ditemukan."""
+    font_dir = utils.font_dir()
+    candidates = [font_name, DEFAULT_FONT] + sorted(
+        f for f in os.listdir(font_dir) if f.lower().endswith((".ttf", ".ttc", ".otf"))
+    )
+    for name in candidates:
+        if name and os.path.isfile(os.path.join(font_dir, os.path.basename(name))):
+            if name != font_name:
+                logger.warning(f"font '{font_name}' not found, using '{name}'")
+            return os.path.join(font_dir, os.path.basename(name)).replace("\\", "/")
+    raise FileNotFoundError(f"no subtitle font found in {font_dir}; add a .ttf/.ttc file there")
 
 
 def combine_videos(
@@ -194,7 +216,7 @@ def combine_videos(
                     clip = CompositeVideoClip([background, clip_resized])
                     
             shuffle_side = random.choice(["left", "right", "top", "bottom"])
-            if video_transition_mode.value == VideoTransitionMode.none.value:
+            if video_transition_mode is None or video_transition_mode.value == VideoTransitionMode.none.value:
                 clip = clip
             elif video_transition_mode.value == VideoTransitionMode.fade_in.value:
                 clip = video_effects.fadein_transition(clip, 1)
@@ -219,7 +241,10 @@ def combine_videos(
                 
             # wirte clip to temp file
             clip_file = f"{output_dir}/temp-clip-{i+1}.mp4"
-            clip.write_videofile(clip_file, logger=None, fps=fps, codec=video_codec)
+            # audio=False: audio klip tidak dipakai (generate_video memakai audio TTS), dan
+            # semua klip tanpa audio membuat penggabungan tanpa encode ulang di bawah aman.
+            clip.write_videofile(clip_file, logger=None, fps=fps, codec=video_codec,
+                                 audio=False, threads=threads)
             
             close_clip(clip)
         
@@ -254,56 +279,47 @@ def combine_videos(
         logger.info("video combining completed")
         return combined_video_path
     
-    # create initial video file as base
-    base_clip_path = processed_clips[0].file_path
-    temp_merged_video = f"{output_dir}/temp-merged-video.mp4"
-    temp_merged_next = f"{output_dir}/temp-merged-next.mp4"
-    
-    # copy first clip as initial merged video
-    shutil.copy(base_clip_path, temp_merged_video)
-    
-    # merge remaining video clips one by one
-    for i, clip in enumerate(processed_clips[1:], 1):
-        logger.info(f"merging clip {i}/{len(processed_clips)-1}, duration: {clip.duration:.2f}s")
-        
-        try:
-            # load current base video and next clip to merge
-            base_clip = VideoFileClip(temp_merged_video)
-            next_clip = VideoFileClip(clip.file_path)
-            
-            # merge these two clips
-            merged_clip = concatenate_videoclips([base_clip, next_clip])
+    clip_files = list(dict.fromkeys(clip.file_path for clip in processed_clips))
+    try:
+        concat_without_reencode([c.file_path for c in processed_clips], combined_video_path, output_dir)
+    except Exception as e:
+        logger.warning(f"fast concat failed ({e}), falling back to re-encoding")
+        clips = [VideoFileClip(c.file_path) for c in processed_clips]
+        merged_clip = concatenate_videoclips(clips)
+        merged_clip.write_videofile(
+            filename=combined_video_path, threads=threads, logger=None, audio=False, fps=fps,
+            codec=video_codec,
+        )
+        close_clip(merged_clip)
+        for c in clips:
+            close_clip(c)
 
-            # save merged result to temp file
-            merged_clip.write_videofile(
-                filename=temp_merged_next,
-                threads=threads,
-                logger=None,
-                temp_audiofile_path=output_dir,
-                audio_codec=audio_codec,
-                fps=fps,
-            )
-            close_clip(base_clip)
-            close_clip(next_clip)
-            close_clip(merged_clip)
-            
-            # replace base file with new merged file
-            delete_files(temp_merged_video)
-            os.rename(temp_merged_next, temp_merged_video)
-            
-        except Exception as e:
-            logger.error(f"failed to merge clip: {str(e)}")
-            continue
-    
-    # after merging, rename final result to target file name
-    os.rename(temp_merged_video, combined_video_path)
-    
-    # clean temp files
-    clip_files = [clip.file_path for clip in processed_clips]
     delete_files(clip_files)
-            
     logger.info("video combining completed")
     return combined_video_path
+
+
+def concat_without_reencode(paths: List[str], output_file: str, work_dir: str) -> None:
+    """Sambung klip dengan codec/resolusi/fps identik memakai ffmpeg concat demuxer (-c copy).
+
+    Jauh lebih cepat daripada concatenate_videoclips + write_videofile, yang meng-encode ulang
+    setiap frame. Klip yang sama boleh muncul berkali-kali (dipakai saat klip di-loop).
+    """
+    list_file = os.path.join(work_dir, "temp-concat-list.txt")
+    with open(list_file, "w", encoding="utf-8") as f:
+        for p in paths:
+            escaped = os.path.abspath(p).replace("\\", "/").replace("'", "'\\''")
+            f.write(f"file '{escaped}'\n")
+    try:
+        subprocess.run(
+            [FFMPEG_BINARY, "-y", "-loglevel", "error", "-f", "concat", "-safe", "0",
+             "-i", list_file, "-c", "copy", "-an", output_file],
+            check=True, capture_output=True, text=True,
+        )
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(e.stderr.strip() or str(e)) from e
+    finally:
+        delete_files(list_file)
 
 
 def wrap_text(text, max_width, font="Arial", fontsize=60):
@@ -383,9 +399,7 @@ def generate_video(
 
     font_path = ""
     if params.subtitle_enabled:
-        if not params.font_name:
-            params.font_name = "STHeitiMedium.ttc"
-        font_path = os.path.join(utils.font_dir(), params.font_name)
+        font_path = resolve_font(params.font_name)
         if os.name == "nt":
             font_path = font_path.replace("\\", "/")
 

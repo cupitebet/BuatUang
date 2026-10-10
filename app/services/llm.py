@@ -165,50 +165,32 @@ def _generate_response(prompt: str) -> str:
                     raise Exception(f"[{llm_provider}] returned an empty response")
 
             if llm_provider == "gemini":
-                import google.generativeai as genai
+                # google-generativeai sudah tidak didukung Google sejak akhir 2025; pakai google-genai.
+                from google import genai
+                from google.genai import types
 
-                genai.configure(api_key=api_key, transport="rest")
-
-                generation_config = {
-                    "temperature": 0.5,
-                    "top_p": 1,
-                    "top_k": 1,
-                    "max_output_tokens": 2048,
-                }
-
+                client = genai.Client(api_key=api_key)
                 safety_settings = [
-                    {
-                        "category": "HARM_CATEGORY_HARASSMENT",
-                        "threshold": "BLOCK_ONLY_HIGH",
-                    },
-                    {
-                        "category": "HARM_CATEGORY_HATE_SPEECH",
-                        "threshold": "BLOCK_ONLY_HIGH",
-                    },
-                    {
-                        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                        "threshold": "BLOCK_ONLY_HIGH",
-                    },
-                    {
-                        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-                        "threshold": "BLOCK_ONLY_HIGH",
-                    },
+                    types.SafetySetting(category=category, threshold="BLOCK_ONLY_HIGH")
+                    for category in (
+                        "HARM_CATEGORY_HARASSMENT",
+                        "HARM_CATEGORY_HATE_SPEECH",
+                        "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                        "HARM_CATEGORY_DANGEROUS_CONTENT",
+                    )
                 ]
-
-                model = genai.GenerativeModel(
-                    model_name=model_name,
-                    generation_config=generation_config,
-                    safety_settings=safety_settings,
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        temperature=0.5,
+                        max_output_tokens=2048,
+                        safety_settings=safety_settings,
+                    ),
                 )
-
-                try:
-                    response = model.generate_content(prompt)
-                    candidates = response.candidates
-                    generated_text = candidates[0].content.parts[0].text
-                except (AttributeError, IndexError) as e:
-                    print("Gemini Error:", e)
-
-                return generated_text
+                if not response.text:
+                    raise Exception(f"[{llm_provider}] returned an empty or blocked response")
+                return response.text
 
             if llm_provider == "cloudflare":
                 response = requests.post(

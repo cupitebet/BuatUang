@@ -1,6 +1,12 @@
 [app]
 video_source = "pexels" # "pexels" or "pixabay"
 
+# API key untuk REST API (port 8080). Jika diisi, setiap request wajib mengirim header
+# `x-api-key: <nilai ini>`. WAJIB diisi jika API bisa diakses dari jaringan lain,
+# karena tanpa itu siapa pun bisa membuat video memakai API key LLM/Pexels kamu.
+# Required header `x-api-key` for the REST API when set. Set it whenever the API is reachable from other machines.
+api_key = ""
+
 # 是否隐藏配置面板
 hide_config = false
 
@@ -82,7 +88,7 @@ azure_api_version = "2024-02-15-preview"
 
 ########## Gemini API Key
 gemini_api_key = ""
-gemini_model_name = "gemini-1.0-pro"
+gemini_model_name = "gemini-flash-latest"  # alias ke model Flash terbaru; daftar model: ai.google.dev/gemini-api/docs/models
 
 ########## Qwen API Key
 # Visit https://dashscope.console.aliyun.com/apiKey to get your API key
@@ -101,16 +107,10 @@ deepseek_model_name = "deepseek-chat"
 
 # Subtitle Provider, "edge" or "whisper"
 # If empty, the subtitle will not be generated
+# "whisper" requires the optional packages: pip install -r requirements-whisper.txt
 subtitle_provider = "edge"
 
-#
-# ImageMagick
-#
-# Once you have installed it, ImageMagick will be automatically detected, except on Windows!
-# On Windows, for example "C:\Program Files (x86)\ImageMagick-7.1.1-Q16-HDRI\magick.exe"
-# Download from https://imagemagick.org/archive/binaries/ImageMagick-7.1.1-29-Q16-x64-static.exe
-
-# imagemagick_path = "C:\\Program Files (x86)\\ImageMagick-7.1.1-Q16\\magick.exe"
+# ImageMagick is no longer needed: moviepy 2.x renders subtitles with Pillow.
 
 
 #

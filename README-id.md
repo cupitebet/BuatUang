@@ -165,19 +165,21 @@ Jika menggunakan sistem Windows, silakan lihat dokumentasi Microsoft:
 2. https://learn.microsoft.com/id-id/windows/wsl/tutorials/wsl-containers
 
 ```shell
-cd MoneyPrinterTurbo
-docker-compose up
+cd BuatUang
+docker compose up
 ```
 
-> Catatan: Versi terbaru docker secara otomatis menginstal docker compose dalam bentuk plugin saat instalasi, perintah startup disesuaikan menjadi `docker compose up`
+> Catatan: Docker versi lama memakai perintah `docker-compose up` (dengan tanda hubung).
 
 #### ② Akses Antarmuka Web
 
-Buka browser, kunjungi http://0.0.0.0:8501
+Buka browser, kunjungi http://127.0.0.1:8501
 
 #### ③ Akses Dokumentasi API
 
-Buka browser, kunjungi http://0.0.0.0:8080/docs atau http://0.0.0.0:8080/redoc
+Buka browser, kunjungi http://127.0.0.1:8080/docs atau http://127.0.0.1:8080/redoc
+
+> 🔒 Secara default port hanya bisa diakses dari komputer ini. Kalau ingin membukanya ke jaringan lain (misalnya di VPS), **isi `api_key` di `config.toml` dulu**, lalu hapus prefix `127.0.0.1:` di `docker-compose.yml`. Setiap request API kemudian wajib mengirim header `x-api-key`.
 
 ### Deployment Manual 📦
 
@@ -191,32 +193,22 @@ Buka browser, kunjungi http://0.0.0.0:8080/docs atau http://0.0.0.0:8080/redoc
 Disarankan menggunakan [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) untuk membuat virtual environment python
 
 ```shell
-git clone https://github.com/harry0703/MoneyPrinterTurbo.git
-cd MoneyPrinterTurbo
-conda create -n MoneyPrinterTurbo python=3.11
-conda activate MoneyPrinterTurbo
+git clone https://github.com/cupitebet/BuatUang.git
+cd BuatUang
+conda create -n BuatUang python=3.11
+conda activate BuatUang
 pip install -r requirements.txt
 ```
 
-#### ② Instal ImageMagick
+#### ② Tidak Perlu ImageMagick
 
-- Windows:
-    - Download https://imagemagick.org/script/download.php Pilih versi Windows, pastikan pilih versi **static library**, misalnya ImageMagick-7.1.1-32-Q16-x64-**static**.exe
-    - Instal ImageMagick yang sudah diunduh, **jangan ubah path instalasi**
-    - Modifikasi `file konfigurasi config.toml`, atur `imagemagick_path` ke **path instalasi sebenarnya**
+Versi ini memakai moviepy 2.x yang merender subtitle dengan Pillow, jadi **ImageMagick tidak perlu diinstal**. Font subtitle bawaan (Noto Sans Bold) sudah ada di `resource/fonts/`.
 
-- MacOS:
-  ```shell
-  brew install imagemagick
-  ```
-- Ubuntu
-  ```shell
-  sudo apt-get install imagemagick
-  ```
-- CentOS
-  ```shell
-  sudo yum install ImageMagick
-  ```
+Subtitle mode **whisper** bersifat opsional. Kalau mau memakainya, instal paket tambahan:
+
+```shell
+pip install -r requirements-whisper.txt
+```
 
 #### ③ Jalankan Antarmuka Web 🌐
 
@@ -319,12 +311,6 @@ Dalam hal ini Anda dapat mengunduh ffmpeg dari https://www.gyan.dev/ffmpeg/build
 # Silakan atur sesuai path sebenarnya, perhatikan pemisah path Windows adalah \\
 ffmpeg_path = "C:\\Users\\harry\\Downloads\\ffmpeg.exe"
 ```
-
-### ❓Kebijakan keamanan ImageMagick mencegah operasi terkait file temporary @/tmp/tmpur5hyyto.txt
-
-Anda dapat menemukan kebijakan ini dalam file konfigurasi ImageMagick policy.xml.
-File ini biasanya terletak di /etc/ImageMagick-`X`/ atau lokasi serupa di direktori instalasi ImageMagick.
-Modifikasi entri yang berisi `pattern="@"`, ubah `rights="none"` menjadi `rights="read|write"` untuk mengizinkan operasi baca dan tulis pada file.
 
 ### ❓OSError: [Errno 24] Too many open files
 

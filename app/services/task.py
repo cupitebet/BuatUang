@@ -25,7 +25,8 @@ def generate_script(task_id, params):
     else:
         logger.debug(f"video script: \n{video_script}")
 
-    if not video_script:
+    # llm.generate_script mengembalikan "Error: ..." saat gagal; jangan dibacakan sebagai naskah
+    if not video_script or video_script.startswith("Error: "):
         sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
         logger.error("failed to generate video script.")
         return None
@@ -50,7 +51,8 @@ def generate_terms(task_id, params, video_script):
 
         logger.debug(f"video terms: {utils.to_json(video_terms)}")
 
-    if not video_terms:
+    # llm.generate_terms mengembalikan string "Error: ..." (bukan list) saat gagal
+    if not video_terms or isinstance(video_terms, str):
         sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
         logger.error("failed to generate video terms.")
         return None
@@ -112,6 +114,18 @@ def generate_subtitle(task_id, params, video_script, sub_maker, audio_file):
 
     if subtitle_provider == "whisper" or subtitle_fallback:
         subtitle.create(audio_file=audio_file, subtitle_file=subtitle_path)
+        if not os.path.exists(subtitle_path):
+            # Whisper tidak terpasang atau modelnya gagal dimuat. Jangan lanjut ke correct():
+            # tanpa file, correct() menulis semua baris dengan timestamp 00:00:00 (tak terlihat).
+            if subtitle_fallback:
+                logger.error("whisper fallback failed, the video will have no subtitles")
+                return ""
+            logger.error(
+                "failed to create subtitles with whisper; install it with "
+                "`pip install -r requirements-whisper.txt` or set subtitle_provider = \"edge\""
+            )
+            sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
+            return None
         logger.info("\n\n## correcting subtitle")
         subtitle.correct(subtitle_file=subtitle_path, video_script=video_script)
 
@@ -269,6 +283,8 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
     subtitle_path = generate_subtitle(
         task_id, params, video_script, sub_maker, audio_file
     )
+    if subtitle_path is None:
+        return
 
     if stop_at == "subtitle":
         sm.state.update_task(
